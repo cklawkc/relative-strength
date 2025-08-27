@@ -24,9 +24,9 @@ jobs:
 
           - name: Push RSRATING.csv to TradingView git clone
             run: |
-              git clone https://Fred6725:${{ secrets.PAT }}@github.com/Fred6725/seed_fred6725_rs_rating.git
-              cp ./output/RSRATING.csv ./seed_fred6725_rs_rating/data
-              cd seed_fred6725_rs_rating
+              git clone https://cklawkc:${{ secrets.PAT }}@github.com/cklawkc/seed_cklawkc_rs_rating.git
+              cp ./output/RSRATING.csv ./seed_cklawkc_rs_rating/data
+              cd seed_cklawkc_rs_rating
               git config user.name "CI" && git config user.email "ci@github.com"
               git add --all
               git commit -m "CI RSRATING update" || echo "nothing to commit"
@@ -34,7 +34,7 @@ jobs:
           
           - name: push to log git
             run: |
-              git clone https://Fred6725:${{ secrets.PAT }}@github.com/Fred6725/rs-log.git
+              git clone https://cklawkc:${{ secrets.PAT }}@github.com/cklawkc/rs-log.git
               rm ./rs-log/output/* && cp -a ./output/. ./rs-log/output
               cd rs-log
               git config user.name "CI" && git config user.email "ci@github.com"
