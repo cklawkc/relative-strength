@@ -1,0 +1,49 @@
+name: Output
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3
+
+      - name: setup python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+
+      - name: execute py script # aggregate current data
+        run: |
+          python -m pip install -r requirements.txt
+          python relative-strength.py true false ${{ secrets.API_KEY }}
+
+      - name: Push RSRATING.csv to TradingView git clone
+        run: |
+          git clone https://cklawkc:${{ secrets.PAT }}@github.com/cklawkc/seed_cklawkc_rs_rating.git
+          cp ./output/RSRATING.csv ./seed_cklawkc_rs_rating/data
+          cd seed_cklawkc_rs_rating
+          git config user.name "CI" && git config user.email "ci@github.com"
+          git add --all
+          git commit -m "CI RSRATING update" || echo "nothing to commit"
+          git push || echo "nothing to push"
+
+      - name: push to log git
+        run: |
+          git clone https://cklawkc:${{ secrets.PAT }}@github.com/cklawkc/rs-log.git
+          rm -rf ./rs-log/output/* || true
+          cp -a ./output/. ./rs-log/output
+          cd rs-log
+          git config user.name "CI" && git config user.email "ci@github.com"
+          git add --all
+          git commit -m "CI output update" || echo "nothing to commit"
+          git push || echo "nothing to push"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: output
+          path: output
