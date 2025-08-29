@@ -295,8 +295,7 @@ def get_yf_data(security, start_date, end_date):
             start=start_date, 
             end=end_date, 
             auto_adjust=False, 
-            progress=False,
-            session=session
+            progress=False
         )
         
         # Add a small delay to avoid rate limiting (adjust as needed)
